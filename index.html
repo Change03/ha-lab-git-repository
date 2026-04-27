@@ -1,0 +1,14 @@
+cat > index.html <<'EOF'
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>AWS CI/CD Test</title>
+</head>
+<body style="text-align:center; padding:60px; font-family:sans-serif;">
+  <h1 style="color:#FF9900;">CI/CD 자동 배포 성공!</h1>
+  <p>GitHub Push → CodeDeploy → EC2 자동 반영</p>
+  <p>배포 버전: <b>v1.0</b></p>
+</body>
+</html>
+EOF

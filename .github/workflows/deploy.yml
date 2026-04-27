@@ -1,0 +1,44 @@
+cat > .github/workflows/deploy.yml <<'EOF'
+name: Deploy to AWS EC2 via CodeDeploy
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  AWS_REGION: ap-northeast-2
+  S3_BUCKET: ha-lab-deploy-bucket-Change03
+  CODEDEPLOY_APP: ha-lab-codedeploy
+  CODEDEPLOY_GROUP: ha-lab-deploy-group
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Upload bundle to S3
+        run: |
+          aws deploy push \
+            --application-name ${{ env.CODEDEPLOY_APP }} \
+            --s3-location s3://${{ env.S3_BUCKET }}/deploy-${{ github.sha }}.zip \
+            --source .
+
+      - name: Create CodeDeploy deployment
+        run: |
+          aws deploy create-deployment \
+            --application-name ${{ env.CODEDEPLOY_APP }} \
+            --deployment-group-name ${{ env.CODEDEPLOY_GROUP }} \
+            --s3-location bucket=${{ env.S3_BUCKET }},key=deploy-${{ github.sha }}.zip,bundleType=zip \
+            --deployment-config-name CodeDeployDefault.OneAtATime \
+            --description "Deploy from GitHub Actions ${{ github.sha }}"
+EOF
