@@ -46,14 +46,11 @@ jobs:
           sed -i "s/배포 버전: [^<]*/배포 버전: ${SHORT_SHA} (${DEPLOY_TIME})/" index.html
   
       # ④ S3에 배포 패키지 업로드 
-      - name: Upload to S3 
-        run: | 
-         zip -r deploy-${APP_VERSION}.zip . \ 
-            --exclude "*.git*" --exclude ".github/*" --exclude "tests/*" 
-          aws s3 cp deploy-${APP_VERSION}.zip \ 
-            s3://${S3_BUCKET}/releases/deploy-${APP_VERSION}.zip 
-          aws s3 cp deploy-${APP_VERSION}.zip \ 
-            s3://${S3_BUCKET}/releases/deploy-latest.zip 
+      - name: Upload to S3
+        run: |
+          zip -r deploy-${APP_VERSION}.zip . -x "*.git*" ".github/*" "tests/*"
+          aws s3 cp deploy-${APP_VERSION}.zip s3://${S3_BUCKET}/releases/deploy-${APP_VERSION}.zip
+          aws s3 cp deploy-${APP_VERSION}.zip s3://${S3_BUCKET}/releases/deploy-latest.zip
   
       # ⑤ ASG InService 인스턴스 ID 조회 
       - name: Get ASG instance IDs 
