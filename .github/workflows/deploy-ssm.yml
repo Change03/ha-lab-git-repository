@@ -61,7 +61,7 @@ jobs:
         run: |
           INSTANCE_IDS=$(aws autoscaling describe-auto-scaling-groups \
             --auto-scaling-group-names "${ASG_NAME}" \
-            --query 'AutoScalingGroups[0].Instances[?LifecycleState==`InService`].InstanceId' \
+            --query 'AutoScalingGroups[0].Instances[].InstanceId'
             --output text | tr '\t' ' ')
 
           echo "instance_ids=${INSTANCE_IDS}" >> $GITHUB_OUTPUT
