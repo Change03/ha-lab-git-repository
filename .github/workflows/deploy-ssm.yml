@@ -7,7 +7,7 @@ on:
 
 env:
   AWS_REGION: ap-northeast-2
-  S3_BUCKET: ha-lab-deploy-bucket-154102274785-${{ secrets.AWS_ACCOUNT_ID }}
+  S3_BUCKET: ha-lab-deploy-bucket-154102274785
   ASG_NAME: ha-lab-asg
   DEPLOY_DIR: /var/www/html
   APP_VERSION: ${{ github.sha }}
