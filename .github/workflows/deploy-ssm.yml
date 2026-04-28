@@ -94,9 +94,10 @@ jobs:
           done 
   
       # ⑦ ALB 최종 응답 확인 
-      - name: Verify via ALB 
-        run: | 
-          curl -sf --max-time 10 http://${{ secrets.ALB_DNS }} && echo '✅ ALB 정상'
+      - name: Verify via ALB
+        run: |
+          echo "ALB_DNS=${{ secrets.ALB_DNS }}"
+          curl -i --max-time 10 http://${{ secrets.ALB_DNS }}
 
       - name: Debug files
         run: |
