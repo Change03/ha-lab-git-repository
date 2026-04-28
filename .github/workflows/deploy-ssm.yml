@@ -93,3 +93,8 @@ jobs:
       - name: Verify via ALB 
         run: | 
           curl -sf --max-time 10 http://${{ secrets.ALB_DNS }} && echo '✅ ALB 정상'
+
+      - name: Debug files
+        run: |
+          pwd
+          ls -al
