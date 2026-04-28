@@ -96,6 +96,8 @@ jobs:
               --comment "Deploy static app from S3" \
               --parameters 'commands=[
                 "set -e",
+                "sudo apt-get update -y",
+                "sudo apt-get install -y awscli unzip",
                 "aws s3 cp s3://'${S3_BUCKET}'/releases/deploy-'${APP_VERSION}'.zip /tmp/deploy.zip",
                 "sudo rm -rf /tmp/deploy",
                 "mkdir -p /tmp/deploy",
