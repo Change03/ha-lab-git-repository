@@ -59,13 +59,26 @@ jobs:
       - name: Get ASG instance IDs
         id: get_instances
         run: |
+          echo "현재 AWS 계정/권한 확인"
+          aws sts get-caller-identity
+
+          echo "ASG 목록 확인"
+          aws autoscaling describe-auto-scaling-groups \
+            --query 'AutoScalingGroups[].AutoScalingGroupName' \
+            --output table
+
+          echo "ha-lab-asg 상세 확인"
+          aws autoscaling describe-auto-scaling-groups \
+            --auto-scaling-group-names "${ASG_NAME}" \
+            --output json
+
           INSTANCE_IDS=$(aws autoscaling describe-auto-scaling-groups \
             --auto-scaling-group-names "${ASG_NAME}" \
             --query 'AutoScalingGroups[0].Instances[].InstanceId' \
-            --output text | tr '\t' ' ')
+            --output text)
 
-          echo "instance_ids=${INSTANCE_IDS}" >> $GITHUB_OUTPUT
           echo "Found instances: ${INSTANCE_IDS}"
+          echo "instance_ids=${INSTANCE_IDS}" >> $GITHUB_OUTPUT
 
       - name: Deploy via SSM
         run: |
